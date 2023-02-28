@@ -1,24 +1,56 @@
-import logo from './logo.svg';
 import './App.css';
+import { Configuration, OpenAIApi } from 'openai';
+import { useState } from 'react';
 
 function App() {
+
+  const configuration = new Configuration({
+    apiKey: process.env.OPEN_AI_KEY,
+  });
+  const openai = new OpenAIApi(configuration);
+
+  const [prompt, setPrompt] = useState("")
+  const [result, setResult] = useState("")
+  const [loading, setLoading] = useState(false)
+
+  const handleClick = async () => {
+    setLoading(true);
+    try {
+      const response = await openai.createCompletion({
+        model: "text-davinci-003",
+        prompt: prompt,
+        max_tokens: 2047,
+        temperature: 0.7,
+        top_p: 1.0,
+      });
+      setResult(response.data.choices[0].text)
+    } catch (error) {
+      console.log(error);
+    }
+    setLoading(false);
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <main className='main'>
+      <div className='w-2/4 mx-auto'>
+        <textarea
+          type='text'
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          placeholder='Write your prompt'
+          className='textarea'
+        ></textarea>
+
+        <button
+          onClick={handleClick}
+          disabled={loading || prompt.length === 0}
+          className='btn'
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          {loading ? "Generating..." : 'Generate'}
+        </button>
+
+        <pre className='result'>{result}</pre>
+      </div>
+    </main>
   );
 }
 

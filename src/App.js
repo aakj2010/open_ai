@@ -1,12 +1,11 @@
 import './App.css';
 import { Configuration, OpenAIApi } from 'openai';
 import { useState } from 'react';
-import { env } from "./config"
 
 function App() {
 
   const configuration = new Configuration({
-    apiKey: `${env.OPEN_AI_KEY}`,
+    apiKey: "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",
   });
   const openai = new OpenAIApi(configuration);
 

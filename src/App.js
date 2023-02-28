@@ -1,11 +1,12 @@
 import './App.css';
 import { Configuration, OpenAIApi } from 'openai';
 import { useState } from 'react';
+import { env } from "./config"
 
 function App() {
 
   const configuration = new Configuration({
-    apiKey: process.env.OPEN_AI_KEY,
+    apiKey: `${env.OPEN_AI_KEY}`,
   });
   const openai = new OpenAIApi(configuration);
 
@@ -22,6 +23,8 @@ function App() {
         max_tokens: 2047,
         temperature: 0.7,
         top_p: 1.0,
+        frequency_penalty: 0.0,
+        presence_penalty: 0.0,
       });
       setResult(response.data.choices[0].text)
     } catch (error) {

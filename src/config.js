@@ -1,3 +1,3 @@
 export const env ={
-    OPEN_AI_KEY : "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",
+    OPEN_AI_KEY :"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",
 }

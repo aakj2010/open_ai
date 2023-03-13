@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { Configuration, OpenAIApi } from 'openai';
 import { env } from './config'
-import { useSpeechRecognition } from 'react-speech-kit';
+import { useSpeechRecognition, useSpeechSynthesis } from 'react-speech-kit';
+
 
 function Example() {
     const [value, setValue] = useState('');
     const [result, setResult] = useState("")
     const [loading, setLoading] = useState(false)
+
+    const { speak } = useSpeechSynthesis();
 
     const { listen, listening, stop } = useSpeechRecognition({
         onResult: (response) => {
@@ -53,7 +56,7 @@ function Example() {
             />
             <button onMouseDown={listen} onMouseUp={stop} className='btn w-2/4 mx-auto'>
                 🎤 Hold to talk
-            </button> 
+            </button>
             {listening && <div className='text-gray-200'>Go ahead I'm listening</div>}
 
             <button
@@ -63,11 +66,18 @@ function Example() {
             >
                 {loading ? "Generating..." : 'Generate'}
             </button>
-            <button
+
+            {/* <button
                 onClick={textToSpeech}
                 className='btn '
-                disabled={loading}
-            >Result in Voice</button>
+                disabled={loading || value.length === 0}
+            >Play Result in Voice</button> */}
+            <button
+                onClick={() => speak({ text: value })}
+                className='btn '
+                disabled={loading || value.length === 0}
+            >Speaker </button>
+
             <pre className='result '>{result}</pre>
         </div>
     );
